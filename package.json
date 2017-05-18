@@ -1,0 +1,32 @@
+{
+  "name": "openwhisk-expressjs",
+  "version": "1.1.0",
+  "description": "Express.js OpenWhisk integration",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IBM/expressjs-openwhisk.git"
+  },
+  "keywords": [
+    "openwhisk",
+    "express",
+    "deploy",
+    "node"
+  ],
+  "author": "Lionel Villard",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/IBM/expressjs-openwhisk/issues"
+  },
+  "homepage": "https://github.com/IBM/expressjs-openwhisk#readme",
+  "dependencies": {
+    "supertest": "^3.0.0",
+    "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.3.0"
+  }
+}
