@@ -17,6 +17,7 @@ sudo: true
 
 before_script:
   - npm install express-generator -g
+  - npm install -g json
 
 script:
     - ./travis-test.sh

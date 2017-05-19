@@ -19,30 +19,30 @@ set -e
 OPEN_WHISK_BIN=/home/ubuntu/bin
 LINK=https://openwhisk.ng.bluemix.net/cli/go/download/linux/amd64/wsk
 
-#echo "Downloading OpenWhisk CLI from '$LINK'...\n"
-#curl -O $LINK
-#chmod u+x wsk
-#export PATH=$PATH:`pwd`
-
-#echo "Configuring CLI from apihost and API key\n"
-#wsk property set --apihost openwhisk.ng.bluemix.net --auth $OPEN_WHISK_KEY > /dev/null 2>&1
+echo "Downloading OpenWhisk CLI from '$LINK'...\n"
+curl -O $LINK
+chmod u+x wsk
+export PATH=$PATH:`pwd`
 
 printf "Generating express app\n"
 express --view=pug myexpressapp
 cd myexpressapp
 npm install
 
+printf "patch package.json\n"
+json -I -f package.json -e 'this.main="action.js"'
+
 printf "Patch views/layout.pug\n"
 cat > views/layout.pug << EOM
 doctype html
-  html
-    head
-      title= title
-      if baseurl
-        base(href=baseurl)
-      link(rel='stylesheet', href='stylesheets/style.css')
-    body
-      block content
+html
+  head
+    title= title
+    if baseurl
+      base(href=baseurl)
+    link(rel='stylesheet', href='stylesheets/style.css')
+  body
+    block content
 EOM
 
 echo "Install expressjs-openwhisk\n"
@@ -50,8 +50,8 @@ npm install expressjs-openwhisk --save
 
 cat > action.js << EOM
 
-const app = require('./server');
-const forward = require('openwhisk-expressjs')(app);
+const app = require('./app');
+const forward = require('expressjs-openwhisk')(app);
 
 function main(request) {
   return forward(request);
@@ -60,22 +60,20 @@ function main(request) {
 exports.main = main;
 EOM
 
-#echo "Invoking a write to cloudant"
-#wsk action invoke --blocking --result write-to-cloudant
-#
-#echo "Waiting for triggers/actions to finish executing(sleep 15)"
-#sleep 15
-#
-#echo "verifiy actions were triggered"
-#LAST_ACTIVATION=`wsk activation list | head -2 | tail -1 | awk '{ print $1 }'`
-#IBM_LOGO=`wsk activation result $LAST_ACTIVATION | jq -r '._id'`
-#if [[ $IBM_LOGO == IBM_logo* ]]
-#then
-#	echo "Found the image we were expecting"
-#else
-#	echo "Did not find the IBM_logo"
-#	wsk activation list
-#	echo "Uninstalling wsk actions, etc."
-#	./deploy.sh --uninstall
-#	exit -1
-#fi
+printf "deploy\n"
+zip -r app.zip .
+../wsk action update express app.zip --kind nodejs:6 --web raw \
+    -p baseurl https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/ \
+    --auth $OPEN_WHISK_KEY
+
+printf "curl\n"
+echo https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/
+RESULT=$(curl https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/)
+
+printf "$RESULT"
+if [ "$RESULT" == "<!DOCTYPE html><html><head><title>Express</title><link rel=\"stylesheet\" href=\"stylesheets/style.css\"></head><body><h1>Express</h1><p>Welcome to Express</p></body></html>" ]; then
+  printf "all good"
+else
+  printf "not good"
+  exit -1
+fi

@@ -64,7 +64,7 @@ Then create the Apache OpenWhisk action handling Web requests by forwarding
 them to `expressjs-openwhisk`. Create a file named `action.js` with this content:
 
 ```
-const app = require('./server');
+const app = require('./app');
 const forward = require('openwhisk-expressjs')(app);
 
 function main(request) {
@@ -72,6 +72,15 @@ function main(request) {
 }
 
 exports.main = main;
+```
+
+In `package.json`, add the following entry:
+
+```json
+{
+   "main": "action.js",
+   ...
+}
 ```
 
 ## 4. Deploy application
