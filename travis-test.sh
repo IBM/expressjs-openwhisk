@@ -64,7 +64,8 @@ printf "deploy\n"
 zip -r app.zip .
 ../wsk action update express app.zip --kind nodejs:6 --web raw \
     -p baseurl https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/ \
-    --auth $OPEN_WHISK_KEY
+    --auth $OPEN_WHISK_KEY \
+    --apihost openwhisk.ng.bluemix.net
 
 printf "curl\n"
 echo https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/
