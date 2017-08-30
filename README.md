@@ -65,7 +65,7 @@ them to `expressjs-openwhisk`. Create a file named `action.js` with this content
 
 ```
 const app = require('./app');
-const forward = require('openwhisk-expressjs')(app);
+const forward = require('expressjs-openwhisk')(app);
 
 function main(request) {
   return forward(request);
