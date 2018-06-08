@@ -42,7 +42,7 @@ module.exports = exports = (app) => (args) => {
         if (args.__ow_query)
             req.query(args.__ow_query);
 
-        if (args.__ow_body && (args.__ow_method === 'post' || args.__ow_method === 'put')) {
+        if (args.__ow_body && (args.__ow_method === 'post' || args.__ow_method === 'put' || args.__ow_method === 'patch')) {
             req = req.send(args.__ow_body);
         }
 

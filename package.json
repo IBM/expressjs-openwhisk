@@ -23,8 +23,9 @@
   },
   "homepage": "https://github.com/IBM/expressjs-openwhisk#readme",
   "dependencies": {
-    "supertest": "^3.0.0",
-    "express": "^4.15.2"
+    "body-parser": "^1.18.3",
+    "express": "^4.15.2",
+    "supertest": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "^3.3.0"
