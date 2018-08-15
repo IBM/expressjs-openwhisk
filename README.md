@@ -5,7 +5,7 @@ This tutorial takes less then 5 minutes to complete.
 
 - Apache OpenWhisk
 - node.js
-- Bluemix account
+- IBM Cloud account
 
 # Steps
 
@@ -85,7 +85,7 @@ In `package.json`, add the following entry:
 
 ## 4. Deploy application
 
-To deploy the application and dependencies on Bluemix, do:
+To deploy the application and dependencies on IBM Cloud, do:
 
 ```bash
 $ zip -r app.zip .
@@ -93,7 +93,7 @@ $ wsk action update express app.zip --kind nodejs:6 --web raw \
     -p baseurl https://openwhisk.ng.bluemix.net/api/v1/web/<org>_<space>/default/express/
 ```
 
-Replace `<org>` and `<space>` by your Bluemix organization and space, respectively. 
+Replace `<org>` and `<space>` by your IBM Cloud organization and space, respectively. 
 
 ## 5. Test application
 
