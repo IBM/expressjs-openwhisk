@@ -34,7 +34,7 @@ To check it is working, start the application by typing the command
 
 ## 2. Change relative paths
  
-The generated Express.s application expects resources to be installed 
+The generated Express.js application expects resources to be installed 
 in the domain root folder but by default Apache OpenWhisk web actions are 
 served from a sub-directory. 
 
