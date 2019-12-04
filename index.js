@@ -55,7 +55,7 @@ module.exports = exports = (app) => (args) => {
                     body: JSON.stringify(err)
                 });
 
-            let body = res.text;
+            let body = res.text || res.body;
 
             let contentType = res.headers['content-type'] || 'text/plain';
             contentType = contentType.split(';')[0];
