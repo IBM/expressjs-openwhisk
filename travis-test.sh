@@ -17,7 +17,7 @@
 set -e
 
 OPEN_WHISK_BIN=/home/ubuntu/bin
-LINK=https://openwhisk.ng.bluemix.net/cli/go/download/linux/amd64/wsk
+LINK=https://${APIHOST}/cli/go/download/linux/amd64/wsk
 
 echo "Downloading OpenWhisk CLI from '$LINK'...\n"
 curl -O $LINK
@@ -63,13 +63,13 @@ EOM
 printf "deploy\n"
 zip -r app.zip .
 ../wsk action update express app.zip --kind nodejs:6 --web raw \
-    -p baseurl https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/ \
+    -p baseurl https://${APIHOST}/api/v1/web/${ORG}_${SPACE}/default/express/ \
     --auth $OPEN_WHISK_KEY \
-    --apihost openwhisk.ng.bluemix.net
+    --apihost {$APIHOST}
 
 printf "curl\n"
-echo https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/
-RESULT=$(curl https://openwhisk.ng.bluemix.net/api/v1/web/${ORG}_${SPACE}/default/express/)
+echo https://${APIHOST}/api/v1/web/${ORG}_${SPACE}/default/express/
+RESULT=$(curl https://${APIHOST}/api/v1/web/${ORG}_${SPACE}/default/express/)
 
 printf "$RESULT"
 if [ "$RESULT" == "<!DOCTYPE html><html><head><title>Express</title><link rel=\"stylesheet\" href=\"stylesheets/style.css\"></head><body><h1>Express</h1><p>Welcome to Express</p></body></html>" ]; then
