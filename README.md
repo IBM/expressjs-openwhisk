@@ -1,7 +1,7 @@
 This project shows how to deploy new and existing Express.js applications to OpenWhisk. 
 This tutorial takes less then 5 minutes to complete. 
 
-# Prerequisite
+# Prerequisites
 
 - Apache OpenWhisk
 - node.js
