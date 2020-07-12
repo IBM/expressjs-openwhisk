@@ -38,6 +38,11 @@ app.patch('/', (req, res) => {
   res.send(req.body);
 });
 
+app.get('/font', (req, res) => {
+  res.set('Content-Type', 'font/woff');
+  res.send(sampleFont);
+});
+
 const forward = require('../index.js')(app);
 
 describe('get', () => {
@@ -99,3 +104,24 @@ describe('put', () => {
     });
   });
 });
+
+describe('get', () => {
+  describe('font', () => {
+    it('should return encoded font', (done) => {
+      forward({
+        __ow_method: 'get',
+        __ow_path: '/font',
+      }).then(res => {
+        assert.equal(wantEncodedFont, res.body);
+        done();
+      });
+    });
+  });
+});
+
+let sampleFont = '';
+for (i = 0; i < 50000; i++) {
+  sampleFont += Math.random().toString(36).substring(2, 15);
+}
+let wantEncodedFont = Buffer.from(sampleFont, 'binary').toString('base64');
+
