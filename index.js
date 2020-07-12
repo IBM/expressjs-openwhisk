@@ -48,19 +48,30 @@ module.exports = exports = (app) => (args) => {
 
         app.action_params = args;
 
+        // use buffer to have custom parer that stores data chunks flagged as binary data
+        req
+            .buffer(true)
+            .parse((res, cb) => {
+                res.setEncoding('binary');
+                res.data = '';
+                res.on('data', (chunk) => res.data += chunk);
+                res.on('end', () => cb(null, Buffer.from(res.data, 'binary')));
+            });
+
         req.end((err, res) => {
-            if (err)
+            if (err || !res.body)
                 return resolve({
                     statusCode: 500,
                     body: JSON.stringify(err)
                 });
 
-            let body = res.text || res.body;
-
+            let body;
             let contentType = res.headers['content-type'] || 'text/plain';
             contentType = contentType.split(';')[0];
             if (isBinary(contentType))
-                body = new Buffer(body).toString('base64');
+                body = res.body.toString('base64');
+            else
+                body = res.body.toString('utf-8');
 
             // Convert response back to a OpenWhisk response object.
             return resolve({
@@ -77,6 +88,7 @@ const mediaTypes = {
     "application/base64": true,
     "application/excel": true,
     "application/font-woff": true,
+    "application/font-woff2": true, // backward compatibility: woff2 had been proposed as this
     "application/gnutar": true,
     "application/java-archive": true,
     "application/javascript": false,
@@ -148,7 +160,8 @@ const mediaTypes = {
 function isBinary(contentType) {
     if (contentType.startsWith('text/') || contentType.startsWith('message/'))
         return false;
-    if (contentType.startsWith('audio/') || contentType.startsWith('image/') || contentType.startsWith('video/'))
+    if (contentType.startsWith('audio/') || contentType.startsWith('image/') ||
+        contentType.startsWith('video/') || contentType.startsWith('font/'))
         return true;
     return mediaTypes[contentType];
 }
