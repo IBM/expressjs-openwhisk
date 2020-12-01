@@ -60,7 +60,7 @@ module.exports = exports = (app) => (args) => {
             let contentType = res.headers['content-type'] || 'text/plain';
             contentType = contentType.split(';')[0];
             if (isBinary(contentType))
-                body = new Buffer(body).toString('base64');
+                body = new Buffer.from(body).toString('base64');
 
             // Convert response back to a OpenWhisk response object.
             return resolve({

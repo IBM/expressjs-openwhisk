@@ -47,7 +47,7 @@ describe('get', () => {
         __ow_method: 'get',
         __ow_path: '/'
       }).then(res => {
-        assert.equal('hello', res.body);
+        assert.strictEqual('hello', res.body);
         done();
       });
     });
@@ -63,7 +63,7 @@ describe('post', () => {
         __ow_path: '/',
         __ow_body:'{}'
       }).then(res => {
-        assert.equal('e30=', res.body);
+        assert.strictEqual('e30=', res.body);
         done();
       });
     });
@@ -78,7 +78,7 @@ describe('patch', () => {
         __ow_path: '/',
         __ow_body:'{}'
       }).then(res => {
-        assert.equal('e30=', res.body);
+        assert.strictEqual('e30=', res.body);
         done();
       });
     });
@@ -93,7 +93,7 @@ describe('put', () => {
         __ow_path: '/',
         __ow_body:'{}'
       }).then(res => {
-        assert.equal('e30=', res.body);
+        assert.strictEqual('e30=', res.body);
         done();
       });
     });
