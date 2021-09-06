@@ -16,6 +16,17 @@
 
 const request = require('supertest');
 
+// Quick test for base64 encoding
+function isBase64(str) {
+    if (str.length % 4 != 0) return false;
+    var last2 = str.slice(-2);
+    const regex = /[A-Za-z0-9+\/=]{2}/gm;
+    var m = regex.exec(last2);
+    if (m) return true;
+
+    return false;
+}
+
 /*
  OpenWhisk web action redirecting requests to Express
 
@@ -43,7 +54,10 @@ module.exports = exports = (app) => (args) => {
             req.query(args.__ow_query);
 
         if (args.__ow_body && (args.__ow_method === 'post' || args.__ow_method === 'put' || args.__ow_method === 'patch')) {
-            req = req.send(args.__ow_body);
+            var body = args.__ow_body
+            if (isBase64(body))
+                body = Buffer.from(body, "base64")
+            req = req.send(body);
         }
 
         app.action_params = args;
